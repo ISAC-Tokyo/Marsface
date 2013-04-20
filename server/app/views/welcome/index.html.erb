@@ -9,6 +9,6 @@
 <%=image_tag(@image.path)%>
 <%= javascript_tag do %>
 $('a.vote').bind('ajax:success', function(evt, data, status, xhr){
-  $('#response_div').html(status);
+  $('#response_div').html(data);
 });
 <% end %>
