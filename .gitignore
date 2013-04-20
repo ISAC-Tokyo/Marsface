@@ -1,0 +1,16 @@
+server/*.rbc
+server/*.sassc
+server/.sass-cache
+server/.rspec
+server/.rvmrc
+server/.bundle
+server/vendor/bundle
+server/log/*
+server/tmp/*
+server/db/*.sqlite3
+server/public/system/*
+server/coverage/
+server/spec/tmp/*
+server/**.orig
+server/rerun.txt
+server/.project
