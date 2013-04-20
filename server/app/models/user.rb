@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_many :votes
   attr_accessible :name, :provider, :uid, :fb_user_id, :email
   def self.find_or_create_from_auth_hash(auth_hash)
     user_data = auth_hash.extra.raw_info

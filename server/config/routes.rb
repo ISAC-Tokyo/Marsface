@@ -2,6 +2,7 @@ Server::Application.routes.draw do
   get "welcome/index"
 
   resources :images
+  resources :vote
 
 
   # The priority is based upon order of creation:

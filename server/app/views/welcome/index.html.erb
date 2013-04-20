@@ -1,8 +1,14 @@
 <h1>Welcome#index</h1>
 <p>Can you find faces?</p>
-<%=image_tag(@image.path)%>
 <%if current_user%>
-  <%= link_to 'I found face!', vote, :remote => true, "data-type" => "html", :class => 'add' %></td>
+  <%= link_to 'I found face!', {:controller => :vote, :action => :create, :image_id => @image.id}, :remote => true, :method => :post, "data-type" => "html", :class => 'vote' %>
+  <div id="response_div"></div>
 <%else%>
   Need login to vote
 <%end%>
+<%=image_tag(@image.path)%>
+<%= javascript_tag do %>
+$('a.vote').bind('ajax:success', function(evt, data, status, xhr){
+  $('#response_div').html(status);
+});
+<% end %>
