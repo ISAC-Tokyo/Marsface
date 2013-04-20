@@ -1,3 +1,4 @@
+server/Gemfile.lock
 server/*.rbc
 server/*.sassc
 server/.sass-cache
