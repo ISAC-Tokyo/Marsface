@@ -1,7 +1,11 @@
 Server::Application.routes.draw do
   get "welcome/index"
 
-  resources :images
+  resources :images do
+    collection do
+      get 'ranking'
+    end
+  end
   resources :vote
 
 
