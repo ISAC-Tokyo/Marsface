@@ -5,3 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+Image.delete_all
+Dir.foreach('app/assets/images/targets') do |item|
+  puts 'load:' + item
+  Image.create(:caption => item, :path => '/assets/targets/' + item)
+end
