@@ -1,5 +1,12 @@
+<style>
+  li {
+    padding:6px;
+    width:300px;
+    list-style:none;
+  }
+</style>
 <ul>
 <% @images.each do |image| %>
-  <li><%= image.path %></li>
+  <li><%= image.cnt %> voted:<br/><%= image_tag image.path %></li>
 <% end %>
 </ul>

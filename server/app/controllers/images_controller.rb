@@ -81,6 +81,6 @@ class ImagesController < ApplicationController
     end
   end
   def ranking
-    @images = Image.join(:Vote)i.select('images.*, count(image_id) as "cnt"').group(:image_id).order(' cnt desc').limit(10)
+    @images = Image.joins(:votes).select('images.*, count(image_id) as "cnt"').group(:image_id).order(' cnt desc').limit(10)
   end
 end
