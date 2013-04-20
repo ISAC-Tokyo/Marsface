@@ -47,7 +47,12 @@
           <a class="brand" href="#">Server</a>
           <div class="container-fluid nav-collapse">
             <ul class="nav">
-              <li><%= link_to "facebook login", "/auth/facebook" %></li>
+              <li>
+              <% if current_user %>
+                Welcome, <%= current_user.name %>!  <% else %>
+                <%= link_to "Sign in with Facebook", "/auth/facebook" %>
+              <% end %>
+              </li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
