@@ -2,7 +2,11 @@ class WelcomeController < ApplicationController
   def index
     offset = rand(Image.count)
     @image = Image.first(:offset => offset)
-    @votes = @image.votes
+    if @image
+      @votes = @image.votes
+    else
+      @votes = []
+    end
     @voted = false;
     if (current_user)
       myid = current_user.id
