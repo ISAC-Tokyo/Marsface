@@ -8,6 +8,7 @@
 Image.delete_all
 Vote.delete_all
 Dir.foreach('app/assets/images/targets') do |item|
+  next if (item == '.' || item == '..')
   puts 'load:' + item
   Image.create(:caption => item, :path => '/assets/targets/' + item)
 end
