@@ -1,10 +1,13 @@
 class WelcomeController < ApplicationController
   def index
-    offset = rand(Image.count)
-    @image = Image.first(:offset => offset)
-    if @image
+    images = Image.joins("LEFT OUTER JOIN votes ON images.id = votes.user_id").find(:all)
+    images.delete_if {|i| i.votes.select{|v| v.user_id == current_user.id}.count > 0}
+    if images.count > 0
+      offset = rand(images.size)
+      @image = images[offset]
       @votes = @image.votes
     else
+      @image = nil;
       @votes = []
     end
     @voted = false;
