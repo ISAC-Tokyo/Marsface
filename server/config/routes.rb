@@ -6,7 +6,11 @@ Server::Application.routes.draw do
       get 'ranking'
     end
   end
-  resources :vote
+  resources :vote do
+    collection do
+      post 'thumbdown'
+    end
+  end
 
 
   # The priority is based upon order of creation:

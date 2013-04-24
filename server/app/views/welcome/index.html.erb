@@ -4,17 +4,18 @@
 <div>
 <%if current_user%>
   <%if @voted%>
-    You voted: Comment:<%=@myvote.comment%>
+    You have voted: Comment:<%=@myvote.comment%>
   <%else%>
+  <div class="votearea">
     <%= link_to 'I found face!', {:controller => :vote, :action => :create, :image_id => @image.id}, :remote => true, :method => :post, "data-type" => "html", :class => 'vote' %>
+    <%= link_to 'No, there is no face', {:controller => :vote, :action => :thumbdown, :image_id => @image.id}, :method => :post, :class => 'thumbdown' %>
+  </div>
   <div id="response_div"></div>
   <%end%>
 <%else%>
   Need login to vote
 <%end%>
 </div>
-<div class="clear">
-<button onclick="javascript:location.reload();" name="Change" value="Change">Change</button>
 <hr/>
 <%=image_tag(@image.path)%>
 <%= javascript_tag do %>
@@ -22,5 +23,7 @@ $('a.vote').bind('ajax:success', function(evt, data, status, xhr){
   $('#response_div').html(data);
   $('a.vote').html('You voted')
 });
+function reload(){
+  location.reload();
+}
 <% end %>
-</div>
