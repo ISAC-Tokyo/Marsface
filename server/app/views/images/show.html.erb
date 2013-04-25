@@ -6,16 +6,29 @@
   <dt><strong><%= image_tag @image.path %></strong></dt>
 </dl>
 
-<dl>
+<ul class="unstyled">
 <% @image.votes.each do |v| %>
   <% if (v.comment)%>
-    <dt><%=v.user.name%></dt>
-    <dd><%=v.comment%><br/><%=v.created_at%></dd>
+    <li >
+    <div class="comment"><%=v.comment%></div>
+    <div class="timeandname">
+      <abbr class="timeago" title="<%= v.created_at.getutc.iso8601 %>">
+        <%= v.created_at.to_s %>
+      </abbr>
+      by <%=v.user.name%>
+    </div>
+    </li>
   <% end %>
 <% end %>
-</dl>
+</ul>
 
 <div class="form-actions">
   <%= link_to t('.back', :default => t("helpers.links.back")),
-              images_path, :class => 'btn'  %>
+    {:controller=>:images, :action => :ranking}, :class => 'btn'  %>
 </div>
+<%= javascript_tag do %>
+  jQuery(document).ready(function() {
+    jQuery("abbr.timeago").timeago();
+    });
+<% end %>
+
