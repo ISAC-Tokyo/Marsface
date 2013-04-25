@@ -6,9 +6,11 @@ class WelcomeController < ApplicationController
       offset = rand(images.size)
       @image = images[offset]
       @votes = @image.votes
+      @count = @image.votes.inject(0) { |sum,elem| sum + elem.num }
     else
-      @image = nil;
+      @image = nil
       @votes = []
+      @count = 0
     end
     @voted = false;
     if (current_user)

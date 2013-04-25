@@ -13,7 +13,7 @@ class ImagesController < ApplicationController
   # GET /images/1
   # GET /images/1.json
   def show
-    @image = Image.find(params[:id])
+    @image = Image.find(params[:id], :includes => :votes)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -81,6 +81,6 @@ class ImagesController < ApplicationController
     end
   end
   def ranking
-    @images = Image.joins(:votes).select('images.*, count(image_id) as "cnt"').group(:image_id).order(' cnt desc').limit(10)
+    @images = Image.joins(:votes).select('images.*, sum(votes.num) as "cnt"').group(:image_id).order(' cnt desc').limit(10)
   end
 end
