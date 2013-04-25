@@ -13,7 +13,7 @@ class ImagesController < ApplicationController
   # GET /images/1
   # GET /images/1.json
   def show
-    @image = Image.find(params[:id], :includes => :votes)
+    @image = Image.find(params[:id], :include => :votes, :order => "created_at desc")
 
     respond_to do |format|
       format.html # show.html.erb
