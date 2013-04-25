@@ -1,6 +1,8 @@
+<div>
 <%if current_user%>
-  <%if @voted%>
-    You have voted: Comment:<%=@myvote.comment%>
+  <%if @image.voted?(current_user.id)%>
+    You have voted(<%=@image.votedby(current_user.id).vto_s%>)<br/>
+    <%=@image.votedby(current_user.id).comment%>
   <%elsif @image == nil%>
     There is no images to vote.
   <%else%>
@@ -14,5 +16,13 @@
   Need login to vote
 <%end%>
 </div>
-<hr/>
+<%= javascript_tag do %>
+$('a.vote').bind('ajax:success', function(evt, data, status, xhr){
+  $('#response_div').html(data);
+  $('a.vote').html('You voted')
+});
+function reload(){
+  location.reload();
+}
+<% end %>
 
