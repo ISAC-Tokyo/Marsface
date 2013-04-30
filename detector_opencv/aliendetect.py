@@ -5,10 +5,15 @@ import sys
 import os
 import urlparse
 import urllib
+import numpy
+from PIL import Image
 
 cascade_name = "haarcascade_frontalface_default.xml"
 cache_path = 'cache/'
 result_path = 'result/'
+splitsize = 1500
+splitstep = 1200
+csvfilename = "result.csv"
 
 def downloadFile(url):
   filename = urlparse.urlparse(url)[2].split('/')[-1]
@@ -20,29 +25,71 @@ def downloadFile(url):
     print 'Cached  : ' + path,
   return path, filename
 
-def detectFaces(filename):
-  # import image
-  src_img = cv2.imread(filename)
+def detectFaces(filename, basefilename, csvdata):
   cascade = cv2.CascadeClassifier(cascade_name)
   
-  return src_img, cascade.detectMultiScale(src_img, 1.11, 4, 0, (40, 40))
+  #
+  # open image as PIL Image (that can open huge image)
+  #
+  im = Image.open(filename)
+  imX = im.size[0]
+  imY = im.size[1]
+  
+  print ' ' + str(imX) + ' x ' + str(imY) + ' pixel'
+  
+  countoffset = 0
+  y = 0
+  while y == 0 or y + splitsize < imY + splitstep:
+    x = 0
+    while x == 0 or x + splitsize < imX + splitstep:
+      #
+      # crop image for insufficient memory
+      #
+      x1 = x
+      y1 = y
+      x2 = x + splitsize - 1
+      y2 = y + splitsize - 1
+      if x2 > imX:
+        x2 = imX - 1
+      if y2 > imY:
+        y2 = imY - 1
 
-def cropImages(basefilename, src_img, faces):
-  count = 0
+      #
+      # convert PIL Image to OpenCV Image
+      #
+      range = (x1, y1, x2, y2)
+      splitedIm = im.crop(range)
+      src_img = numpy.array(splitedIm)
+      
+      print '(' + str(x1) + ',' + str(y1) + ')-(' + str(x2) + ',' + str(y2) + ') ... ',
+      faces = cascade.detectMultiScale(src_img, 1.05, 4, 0, (40, 40))
+      
+      cropImages(src_img, basefilename, faces, countoffset)
+      count = addCsvInfo(faces, csvfilename, x, y, countoffset)
+      print str(count) + ' face(s) found.'
+      
+      countoffset = countoffset + count
+      x = x + splitstep
+    y = y + splitstep
+  return countoffset
+
+def cropImages(src_img, basefilename, faces, countoffset):
+  c = 0
   for (x,y,w,h) in faces:
     img = src_img[y:y+h, x:x+w]
-    outputfile = basefilename + '.' + str(count) + '.png'
+    outputfile = basefilename + '.' + str(c+countoffset) + '.png'
     cv2.imwrite(outputfile, img)
-    count = count + 1
-  return count
+    c = c + 1
+  return c
 
-def addCsvInfo(filename, data, faces):
-  count = 0
-  fp = open(filename, 'a')
+def addCsvInfo(faces, csvfilename, offsetX, offsetY, countoffset):
+  c = 0
+  fp = open(csvfilename, 'a')
   for (x,y,w,h) in faces:
-    fp.write(data + ',' + str(count) + ',' + str(x) + ',' + str(y) + ',' + str(w) + ',' + str(h) + '\n')
-    count = count + 1
+    fp.write(csvdata + ',' + str(c+countoffset) + ',' + str(x+offsetX) + ',' + str(y+offsetY) + ',' + str(w) + ',' + str(h) + '\n')
+    c = c + 1
   fp.close()
+  return c
 
 if __name__ == '__main__':
 
@@ -61,13 +108,11 @@ if __name__ == '__main__':
 
 #  try:
   path, filename = downloadFile(url)
-  img, faces = detectFaces(path)
 
-  data = '"' + filename + '","' + url + '",' + '"moon"' + ',' + '"' + cascade_name + '"'
-  addCsvInfo('result.csv', data, faces)
-
-  count = cropImages(result_path + filename, img, faces)
-  print ' => ' + str(count) + ' face(s) found.'
+  basefilename = result_path + filename
+  csvdata = '"' + filename + '","' + url + '",' + '"moon"' + ',' + '"' + cascade_name + '"'
+  
+  detectFaces(path, basefilename, csvdata)
       
 #  except:
 #    print "Error occured."
