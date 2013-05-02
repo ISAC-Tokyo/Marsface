@@ -7,8 +7,8 @@ class WelcomeController < ApplicationController
     if images.count > 0
       offset = rand(images.size)
       @image = images[offset]
-      @votes = @image.votes.sort{|a,b| a.created <=> b.created}
-      @count = @image.votes.inject(0) { |sum,elem| sum + elem.num }
+      @votes = @image.votes.sort{|a,b| a.created_at <=> b.created_at}
+      #@count = @image.votes.inject(0) { |sum,elem| sum + elem.num }
     else
       @image = nil
       @votes = []

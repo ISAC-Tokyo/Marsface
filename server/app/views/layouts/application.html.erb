@@ -50,7 +50,8 @@
             <ul class="nav">
               <li>
               <% if current_user %>
-                Welcome, <%= current_user.name %>!  <% else %>
+                Welcome, <%= current_user.name %>! <%= link_to "Logout", logout_url %>
+              <% else %>
                 <%= link_to "Sign in with Facebook", "/auth/facebook" %>
               <% end %>
               </li>
