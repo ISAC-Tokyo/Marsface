@@ -71,16 +71,16 @@ def cropImages(inputimage_filename,faces):
 
   im = Image.open(result_path+inputimage_filename+'_result.png')
   for (x,y,width,hight) in faces:
-    im.crop((x-int(width*0.3), y-int(hight*0.3), x+int(width*1.6), y+int(hight*1.6))).save(result_path + inputimage_filename +'_'+str(x)+'_'+str(y)+'_'+str(width)+'_'+str(hight)+'.png')
+    im.crop((x-int(width*0.3), y-int(hight*0.3), x+int(width*1.3), y+int(hight*1.3))).save(result_path + inputimage_filename +'_'+str(x)+'_'+str(y)+'_'+str(width)+'_'+str(hight)+'.png')
     count = count + 1
   return count
 
-def addAlianInfo(inputimage,faces):
+def addAlianInfo(inputimage_filename,faces):
   if len(faces) != 0:
     rect = ''
     for (x,y,width,hight) in faces:
-      rect += '-draw "ellipse ' + str(x + (width*1.2) / 2) + ',' + str(y + (hight*1.2) / 2) + ' ' + str(width*1.2 / 2) + ',' + str(hight*1.2 / 2) + ' 0,360 " '
-    cmd = 'convert ' + inputimage + ' -fill none -stroke green -strokewidth 2 ' + rect + ' ' + result_path + root+'_result.png'
+      rect += '-draw "ellipse ' + str(x + (width /2)) + ',' + str(y + (hight) / 2) + ' ' + str(width*1.2 / 2) + ',' + str(hight*1.2 / 2) + ' 0,360 " '
+    cmd = 'convert ' + cache_path + inputimage_filename + ".png" + ' -fill none -stroke green -strokewidth 2 ' + rect + ' ' + result_path + inputimage_filename+'_result.png'
       
     try:
       print cmd
@@ -121,7 +121,7 @@ if __name__ == '__main__':
 #  print inputimage_ext
 #  print inputimage_filename
 
-#  addAlianInfo(imagepath,faces, inputimage_filename)
+  addAlianInfo(inputimage_filename,faces)
   csvdata = '"' + filepath + '","' + url + '",' + '"moon"' + ',' + '"' + cascade_name + '"'
   addCsvInfo(csvdata,faces,"./result.csv")
   print result_path
