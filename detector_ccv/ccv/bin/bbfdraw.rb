@@ -14,4 +14,5 @@ STDIN.each_line do |line|
 	rect += sprintf("-draw \"ellipse %d,%d %d,%d 0,360\" ", x + width / 2, y + height / 2, width / 2, height / 2)
 end
 
+puts sprintf("convert %s -fill none -stroke green -strokewidth 2 %s%s", ARGV[0], rect, ARGV[1])
 %x[#{sprintf("convert %s -fill none -stroke green -strokewidth 2 %s%s", ARGV[0], rect, ARGV[1])}]
