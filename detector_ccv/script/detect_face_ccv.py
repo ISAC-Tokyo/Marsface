@@ -26,7 +26,7 @@ def detectFaces(filename, algo):
   root, ext = os.path.splitext(filename)
 
   if os.path.isfile('.'.join(filename.split('.')[:-1])+algo+'.cache') == True:
-    print 'use result cache  : ' + '.'.join(filename.split('.')[:-1])+algo+'.cache'
+    print 'Use result cache  : ' + '.'.join(filename.split('.')[:-1])+algo+'.cache'
     f = open('.'.join(filename.split('.')[:-1])+algo+'.cache')
     tmp = pickle.load(f)
     f.close()
@@ -37,7 +37,7 @@ def detectFaces(filename, algo):
       im = Image.open(filename).save(root+'.png')
       print 'convert image(png)             : ' + root+'.png'
     else:
-      print 'use convert png image : ' + root + '.png'
+      print 'Use convert png image : ' + root + '.png'
 
   cmd = '../ccv/bin/bbfdetect '+ root + '.png' +' ../ccv/samples/face'
 
@@ -111,7 +111,6 @@ if __name__ == '__main__':
 
   url = sys.argv[1]
   cascade_name = 'btf'
-
   
   imagepath, filepath = downloadFile(url)
   inputimage_root, inputimage_ext = os.path.splitext(imagepath)
