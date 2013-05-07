@@ -19,17 +19,16 @@ def downloadFile(url):
     print 'Download: ' + path
     file, header = urllib.urlretrieve(url, path)
   else:
-    print 'Cached  : ' + path
-
+    print 'Original file Cached  : ' + path
   return path, filename
 
 def detectFaces(filename, algo):
   
   root, ext = os.path.splitext(filename)
 
-  if os.path.isfile(cache_path+'.'.join(filename.split('.')[:-1])+algo+".cache") == True:
-    print 'Cached  : ' +filename+algo+".cache"
-    f = open(cache_path+'.'.join(filename.split('.')[:-1])+algo+".cache")
+  if os.path.isfile('.'.join(filename.split('.')[:-1])+algo+".cache") == True:
+    print 'use result cache  : ' + '.'.join(filename.split('.')[:-1])+algo+".cache"
+    f = open('.'.join(filename.split('.')[:-1])+algo+".cache")
     tmp = pickle.load(f)
     f.close()
     return tmp
@@ -38,6 +37,10 @@ def detectFaces(filename, algo):
     if os.path.isfile(root+".png") == False:
       print "convert png"
       im = Image.open(filename).save(root+".png")
+      print "cnvert image(png)             : " + root+".png"
+    else:
+      print "use convert png image : " + root + ".png"
+
   cmd = '../ccv/bin/bbfdetect '+root + ".png" +' ../ccv/samples/face'
 
   print cmd
@@ -70,10 +73,10 @@ def detectFaces(filename, algo):
   
   return result
 
-def cropImages(basefilename, faces,root):                
+def cropImages(basefilename, faces,root,filename):                
   count = 0
   for (x,y,width,hight) in faces:
-    im = Image.open( result_path + root+"_result.png")
+    im = Image.open( result_path + filename+"_result.png")
     im.crop((x-int(width*0.3), y-int(hight*0.3), x+int(width*1.6), y+int(hight*1.6))).save(basefilename+"_"+str(x)+"_"+str(y)+"_"+str(width)+"_"+str(hight)+".png")
     count = count + 1
   return count
@@ -110,16 +113,16 @@ if __name__ == '__main__':
   imagepath, filepath = downloadFile(url)
   print "url       : " + url
   print "imagepath : " +imagepath
-  root, ext = os.path.splitext(imagepath)
-  print "root      : " + root
-  print "ext       : " + ext
-  filename = os.path.basename(root)
-
+  inputimage_root, inputimage_ext = os.path.splitext(imagepath)
+  print "inputimage_root      : " + inputimage_root
+  print "inputimage_ext       : " + inputimage_ext
+  inputimage_filename = os.path.basename(inputimage_root)
+  print "inputimage_filename             : " + inputimage_filename
+  
   faces = detectFaces(imagepath, ALGOTYPE)
 
   data = '"' + filepath + '","' + url + '",' + '"moon"' + ',' + '"' + cascade_name + '"'
-  addCCVInfo(imagepath,'result.csv', data, faces, filename)
-
-  count = cropImages(result_path + filename, faces, root)
+  addCCVInfo(imagepath,'result.csv', data, faces, inputimage_filename)
+  count = cropImages(result_path + filename, faces, root,inputimage_filename)
   print ' => ' + str(count) + ' face(s) found.'
    
