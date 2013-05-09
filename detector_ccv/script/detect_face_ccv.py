@@ -40,18 +40,9 @@ def bbfdetect(filename,target,traindata):
 
   cmd = '../ccv/bin/bbfdetect '+ root + '.png ' +traindata
 
-  try:
-    tmp = commands.getoutput(cmd).splitlines()
-  except Exception as e:
-    print '=== error ==='
-    print 'type:' + str(type(e))
-    print 'args:' + str(e.args)
-    print 'message:' + e.message
-    print 'e:' + str(e)
-    return False
-  
-  result = []
+  tmp = commands.getoutput(cmd).splitlines()
 
+  result = []
   print tmp
   for line in tmp:
     itemList = line[:-1].split(' ')
@@ -86,16 +77,7 @@ def dpmdetect(filename,target,traindata):
   cmd = '../ccv/bin/dpmdetect '+ root + '.png ' +traindata
   
   print cmd
-  try:
-    tmp = commands.getoutput(cmd).splitlines()
-  except Exception as e:
-    print '=== error ==='
-    print 'type:' + str(type(e))
-    print 'args:' + str(e.args)
-    print 'message:' + e.message
-    print 'e:' + str(e)
-    return False
-  
+  tmp = commands.getoutput(cmd).splitlines()
   result = []
 
   print tmp
@@ -161,11 +143,7 @@ if __name__ == '__main__':
   inputimage_root, inputimage_ext = os.path.splitext(imagepath)
   inputimage_filename = os.path.basename(inputimage_root)
   objects = bbfdetect(imagepath, 'face',' ../ccv/samples/face')
-#  objects = dpmdetect(imagepath ,'cars', ' ../ccv/samples/car.m')
-#  print "-"
-#  print inputimage_root 
-#  print inputimage_ext
-#  print inputimage_filename
+  objects = objects + dpmdetect(imagepath ,'cars', ' ../ccv/samples/car.m')
   
   if len(objects) != 0:
     addAlianInfo(inputimage_filename,objects)
