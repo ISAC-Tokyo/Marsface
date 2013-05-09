@@ -9,7 +9,6 @@ from PIL import Image
 image_path = '../testdata/'
 cache_path = '../cache/'
 result_path = '../result/'
-ALGOTYPE = 'bbf'
 
 def downloadFile(url):
   filename = urlparse.urlparse(url)[2].split('/')[-1]
@@ -21,13 +20,13 @@ def downloadFile(url):
     print 'Use original image cache  : ' + path
   return path, filename
 
-def detectFaces(filename, algo):
+def bbfdetect(filename,target,traindata):
   
   root, ext = os.path.splitext(filename)
 
-  if os.path.isfile('.'.join(filename.split('.')[:-1])+algo+'.cache') == True:
-    print 'Use result cache  : ' + '.'.join(filename.split('.')[:-1])+algo+'.cache'
-    f = open('.'.join(filename.split('.')[:-1])+algo+'.cache')
+  if os.path.isfile('.'.join(filename.split('.')[:-1])+target+'.cache') == True:
+    print 'Use result cache  : ' + '.'.join(filename.split('.')[:-1])+target+'.cache'
+    f = open('.'.join(filename.split('.')[:-1])+target+'.cache')
     tmp = pickle.load(f)
     f.close()
     return tmp
@@ -39,7 +38,7 @@ def detectFaces(filename, algo):
     else:
       print 'Use convert png image : ' + root + '.png'
 
-  cmd = '../ccv/bin/bbfdetect '+ root + '.png' +' ../ccv/samples/face'
+  cmd = '../ccv/bin/bbfdetect '+ root + '.png ' +traindata
 
   try:
     tmp = commands.getoutput(cmd).splitlines()
@@ -57,28 +56,74 @@ def detectFaces(filename, algo):
   for line in tmp:
     itemList = line[:-1].split(' ')
     if ('total' in itemList[0]) == False:
-      retult = result.append([int(itemList[0]),int(itemList[1]),int(itemList[2]),int(itemList[3])])
+      retult = result.append([int(itemList[0]),int(itemList[1]),int(itemList[2]),int(itemList[3]),"face"])
   
-  f = open(cache_path+'.'.join(filename.split('.')[:-1])+algo+'.cache','w')
-  print cache_path+'.'.join(filename.split('.')[:-1])+algo+'.cache','w'
+  f = open('.'.join(filename.split('.')[:-1])+target+'.cache','w')
+  print '.'.join(filename.split('.')[:-1])+target+'.cache'
   pickle.dump(result,f)
   f.close()
   
   return result
 
-def cropImages(inputimage_filename,faces):                
-  count = 0
+def dpmdetect(filename,target,traindata):
+  
+  root, ext = os.path.splitext(filename)
 
-  im = Image.open(result_path+inputimage_filename+'_result.png')
-  for (x,y,width,hight) in faces:
-    im.crop((x-int(width*0.3), y-int(hight*0.3), x+int(width*1.3), y+int(hight*1.3))).save(result_path + inputimage_filename +'_'+str(x)+'_'+str(y)+'_'+str(width)+'_'+str(hight)+'.png')
+  if os.path.isfile('.'.join(filename.split('.')[:-1])+target+'.cache') == True:
+    print 'Use result cache  : ' + '.'.join(filename.split('.')[:-1])+target+'.cache'
+    f = open('.'.join(filename.split('.')[:-1])+target+'.cache')
+    tmp = pickle.load(f)
+    f.close()
+    return tmp
+
+  if ext != '.png':
+    if os.path.isfile(root+'.png') == False:
+      im = Image.open(filename).save(root+'.png')
+      print 'convert image(png)             : ' + root+'.png'
+    else:
+      print 'Use convert png image : ' + root + '.png'
+
+  cmd = '../ccv/bin/dpmdetect '+ root + '.png ' +traindata
+  
+  print cmd
+  try:
+    tmp = commands.getoutput(cmd).splitlines()
+  except Exception as e:
+    print '=== error ==='
+    print 'type:' + str(type(e))
+    print 'args:' + str(e.args)
+    print 'message:' + e.message
+    print 'e:' + str(e)
+    return False
+  
+  result = []
+
+  print tmp
+  for line in tmp:
+    itemList = line[:-1].split(' ')
+    if ('total' in itemList[0]) == False:
+      if ('|'  in itemList[0]) == False:
+        retult = result.append([int(itemList[0]),int(itemList[1]),int(itemList[2]),int(itemList[3]),"car"])
+  
+  f = open('.'.join(filename.split('.')[:-1])+target+'.cache','w')
+  print '.'.join(filename.split('.')[:-1])+target+'.cache'
+  pickle.dump(result,f)
+  f.close()
+  
+  return result
+
+def cropImages(inputimage_filename,objects):                
+  count = 0 
+  im = Image.open(result_path + inputimage_filename+'_result.png')
+  for (x,y,width,hight,tag) in objects:
+    im.crop((x-int(width*0.3), y-int(hight*0.3), x+int(width*1.3), y+int(hight*1.3))).save(result_path + inputimage_filename +'_'+str(x)+'_'+str(y)+'_'+str(width)+'_'+str(hight)+'_'+str(tag)+'.png')
     count = count + 1
   return count
 
-def addAlianInfo(inputimage_filename,faces):
-  if len(faces) != 0:
+def addAlianInfo(inputimage_filename,objects):
+  if len(objects) != 0:
     rect = ''
-    for (x,y,width,hight) in faces:
+    for (x,y,width,hight,tag) in objects:
       rect += '-draw "ellipse ' + str(x + (width /2)) + ',' + str(y + (hight) / 2) + ' ' + str(width*1.2 / 2) + ',' + str(hight*1.2 / 2) + ' 0,360 " '
     cmd = 'convert ' + cache_path + inputimage_filename + ".png" + ' -fill none -stroke green -strokewidth 2 ' + rect + ' ' + result_path + inputimage_filename+'_result.png'
       
@@ -93,10 +138,10 @@ def addAlianInfo(inputimage_filename,faces):
       print 'e:' + str(e)
       return False
     
-def addCsvInfo(csvdata,faces,csvfilename):
+def addCsvInfo(csvdata,objects,csvfilename):
   c = 0
   fp = open(csvfilename, 'a')
-  for (x,y,w,h) in faces:
+  for (x,y,w,h,tag) in objects:
     fp.write(csvdata + ',' + str(c) + ',' + str(x) + ',' + str(y) + ',' + str(w) + ',' + str(h) + '\n')
     c = c + 1
   fp.close()
@@ -115,15 +160,18 @@ if __name__ == '__main__':
   imagepath, filepath = downloadFile(url)
   inputimage_root, inputimage_ext = os.path.splitext(imagepath)
   inputimage_filename = os.path.basename(inputimage_root)
-  faces = detectFaces(imagepath, ALGOTYPE)
+  objects = bbfdetect(imagepath, 'face',' ../ccv/samples/face')
+#  objects = dpmdetect(imagepath ,'cars', ' ../ccv/samples/car.m')
 #  print "-"
 #  print inputimage_root 
 #  print inputimage_ext
 #  print inputimage_filename
-
-  addAlianInfo(inputimage_filename,faces)
-  csvdata = '"' + filepath + '","' + url + '",' + '"moon"' + ',' + '"' + cascade_name + '"'
-  addCsvInfo(csvdata,faces,"./result.csv")
-  print result_path
-  count = cropImages(inputimage_filename,faces)
-  print ' => ' + str(count) + ' face(s) found.'
+  
+  if len(objects) != 0:
+    addAlianInfo(inputimage_filename,objects)
+    csvdata = '"' + filepath + '","' + url + '",' + '"moon"' + ',' + '"' + cascade_name + '"'
+    addCsvInfo(csvdata,objects,"./result.csv")
+    count = cropImages(inputimage_filename,objects)
+    print ' => ' + str(count) + ' object(s) found.'
+  else:
+    print 'not found'
