@@ -1,5 +1,6 @@
 set :target_name, "production"
-role :app, "121.119.182.37"
-role :web, "121.119.182.37"
-role :db, "121.119.182.37", :primary => true
-set :branch, "release_phase1"
+set :port, 53555
+role :app, "marface.cloudapp.net"
+role :web, "marface.cloudapp.net"
+role :db, "marface.cloudapp.net", :primary => true
+set :branch, "release"
