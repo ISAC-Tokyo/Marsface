@@ -80,6 +80,11 @@ namespace :deploy do
   task :restart, :except => { :no_release => true } do
     run "kill -s USR2 `cat /tmp/#{application}_unicorn_production.pid`"
   end
+
+  desc "Load the seed data from db/seeds.rb"
+  task :seed do
+    run "cd #{current_path}; bundle exec rake db:seed RAILS_ENV=#{rails_env}"
+  end
 end
 
 
