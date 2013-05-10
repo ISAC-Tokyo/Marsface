@@ -1,7 +1,7 @@
 application = 'marsface'
 
 listen "/tmp/unicorn_#{application}.sock"
-pid "/tmp/unicorn_#{application}.pid"
+pid "/tmp/#{application}_unicorn_production.pid"
 
 worker_processes 6
 preload_app true
