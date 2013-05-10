@@ -6,6 +6,7 @@ import urllib
 import pickle
 from PIL import Image
 
+
 image_path = '../testdata/'
 cache_path = '../cache/'
 result_path = '../result/'
@@ -33,22 +34,24 @@ def bbfdetect(filename,target,traindata):
 
   if ext != '.png':
     if os.path.isfile(root+'.png') == False:
-      im = Image.open(filename).save(root+'.png')
       print 'convert image(png)             : ' + root+'.png'
+      print filename
+      im = Image.open(filename)
+      im.save(root+'.png')
     else:
       print 'Use convert png image : ' + root + '.png'
 
   cmd = '../ccv/bin/bbfdetect '+ root + '.png ' +traindata
 
   tmp = commands.getoutput(cmd).splitlines()
-
+  
   result = []
   print tmp
   for line in tmp:
     itemList = line[:-1].split(' ')
-    if ('total' in itemList[0]) == False:
+    if (('total' in itemList[0]) | ('kille' in itemList[0]) | ('Segmentation' in itemList[0])) == False:
       retult = result.append([int(itemList[0]),int(itemList[1]),int(itemList[2]),int(itemList[3]),"face"])
-  
+      
   f = open('.'.join(filename.split('.')[:-1])+target+'.cache','w')
   print '.'.join(filename.split('.')[:-1])+target+'.cache'
   pickle.dump(result,f)
