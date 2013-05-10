@@ -2,7 +2,8 @@ include ../lib/config.mk
 
 #CC += -faddress-sanitizer -fno-omit-frame-pointer
 LDFLAGS := -L"../lib" -lccv $(LDFLAGS)
-CFLAGS := -O3 -Wall -I"../lib" $(CFLAGS)
+#CFLAGS := -O3 -Wall -I"../lib" $(CFLAGS)
+CFLAGS := -O0 -g  -Wall -I"../lib" $(CFLAGS) -lccmalloc -ldl
 
 #TARGETS = bbffmt msermatch siftmatch bbfcreate bbfdetect swtcreate swtdetect dpmcreate dpmdetect convert tld icfcreate icfdetect icfoptimize
 TARGETS = bbffmt msermatch siftmatch bbfcreate bbfdetect swtcreate swtdetect dpmcreate dpmdetect convert tld 

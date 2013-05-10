@@ -120,12 +120,14 @@ int main(int argc, char** argv)
 	params.size.height = 60;
 	params.deform_shift = 0.01;
 	params.deform_angle = 1;
-	params.deform_scale = 0.1;
-	params.feature_size = 10000;
+	params.deform_scale = 0.07;
+	params.feature_size = 30000;
 	params.weak_classifier = 2000;
 	params.sample_rate = 0.1;
 	params.weight_trimming = 0.95;
 	params.acceptance = acceptance;
+	params.bootstrap_criteria = 0.005;
+	params.bootstrap = 4;
 	ccv_icf_multiscale_classifier_cascade_t* classifier = ccv_icf_classifier_cascade_new(posfiles, positive_count, bgfiles, negative_count, working_dir, params);
 	ccv_icf_write_classifier_cascade(classifier, working_dir);
 	for (i = 0; i < posfiles->rnum; i++)
