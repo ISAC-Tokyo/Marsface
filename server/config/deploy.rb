@@ -36,8 +36,9 @@ set :user, "marsface"
 # end
 
 set :deploy_to, "/srv/apps/#{application}"
+set :bundle_flags, "--quiet"
 set :deploy_via, :copy_subdir
-set :deploy_subdir, '/opt/apps/marsface'
+set :deploy_subdir, 'server'
 set :rails_env, "production"
 set :copy_exclude, [".git/*"]
 set :use_sudo, false

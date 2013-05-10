@@ -1,4 +1,4 @@
-application = 'Marsface'
+application = 'marsface'
 
 listen "/tmp/unicorn_#{application}.sock"
 pid "/tmp/unicorn_#{application}.pid"
@@ -7,10 +7,10 @@ worker_processes 6
 preload_app true
 
 # capistrano 用に RAILS_ROOT を指定
-working_directory "/usr/share/nginx/#{application}/server"
+working_directory "/srv/apps/#{application}/current"
 
 if ENV['RAILS_ENV'] == 'production'
-  shared_path = "/var/www/#{application}/shared"
+  shared_path = "/srv/apps/#{application}/shared"
   stderr_path = "#{shared_path}/log/unicorn.stderr.log"
   stdout_path = "#{shared_path}/log/unicorn.stdout.log"
 end
