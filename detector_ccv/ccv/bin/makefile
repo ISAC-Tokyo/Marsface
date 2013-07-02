@@ -5,8 +5,8 @@ LDFLAGS := -L"../lib" -lccv $(LDFLAGS)
 #CFLAGS := -O3 -Wall -I"../lib" $(CFLAGS)
 CFLAGS := -O0 -g  -Wall -I"../lib" $(CFLAGS) -lccmalloc -ldl
 
-#TARGETS = bbffmt msermatch siftmatch bbfcreate bbfdetect swtcreate swtdetect dpmcreate dpmdetect convert tld icfcreate icfdetect icfoptimize
-TARGETS = bbffmt msermatch siftmatch bbfcreate bbfdetect swtcreate swtdetect dpmcreate dpmdetect convert tld 
+TARGETS = bbffmt msermatch siftmatch bbfcreate bbfdetect swtcreate swtdetect dpmcreate dpmdetect convert tld icfcreate icfdetect icfoptimize
+#TARGETS = bbffmt msermatch siftmatch bbfcreate bbfdetect swtcreate swtdetect dpmcreate dpmdetect convert tld 
 
 all: libccv.a $(TARGETS)
 

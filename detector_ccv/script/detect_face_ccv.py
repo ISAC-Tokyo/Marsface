@@ -83,10 +83,9 @@ def dpmdetect(filename,target,traindata):
   tmp = commands.getoutput(cmd).splitlines()
   result = []
 
-  print tmp
   for line in tmp:
     itemList = line[:-1].split(' ')
-    if ('total' in itemList[0]) == False:
+    if (('total' in itemList[0]) | ('kille' in itemList[0]) | ('Segmentation' in itemList[0])) == False:
       if ('|'  in itemList[0]) == False:
         retult = result.append([int(itemList[0]),int(itemList[1]),int(itemList[2]),int(itemList[3]),"car"])
   
@@ -156,3 +155,4 @@ if __name__ == '__main__':
     print ' => ' + str(count) + ' object(s) found.'
   else:
     print 'not found'
+  print '--------------------------------------------------------------------------------'
