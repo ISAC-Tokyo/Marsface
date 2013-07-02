@@ -28,8 +28,9 @@ def download_image(i):
         localfile.write(img.read())
         img.close()
         localfile.close()
-        return imagetmpdir + image
-        
+    return imagetmpdir + image
+    
+    
 def download_url(url):
     print url
     filedir = tmpdir+md5.new(url).hexdigest()
@@ -43,16 +44,18 @@ def download_url(url):
             pickle.dump(html, f)   
         return html
 
-spamWriter = csv.writer(open(csvfile, 'wb'))
-    
+spamWriter = csv.writer(open(csvfile,  'wb'), delimiter   = '\t'  )
 for i in range(1,all_image_num):
     url = ("http://photojournal.jpl.nasa.gov/catalog/PIA%05i"% (i))
     
     saveimagepath = download_image(i)
     soup = BeautifulSoup(download_url(url))
     caption = soup.find('caption').find('b').string
-    imagetype = soup.find('strong').find('a').string
-    
+    try:
+        imagetype = soup.find('strong').find('a').string
+    except:
+        imagetype = ""
+        
     spamWriter.writerow([i,url,saveimagepath, caption,imagetype])
     
     
