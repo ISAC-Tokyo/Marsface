@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
 import os
@@ -6,18 +6,19 @@ import urlparse
 import urllib
 import numpy
 import csv
-import ImageDraw
-from PIL import Image
+from PIL import Image,ImageDraw, ImageFont
+#from PIL import ImageDrow
+
 
 if __name__ == '__main__':
 
-  filename = "result/csv/result_ccv.csv"
+  filename = "result/csv/result_opencv.csv"
   cache = "cache/"
   tumblr_path = "tumblr/"
   thumbnail_path = "thumbnail/"
   csv_output_name = "result/synth.csv"
 
-  fw = open(csv_output_name, 'w')
+  fw = open(csv_output_name, 'a')
   csvfile = open(filename)
  
   for row in csv.reader(csvfile):
