@@ -104,6 +104,7 @@ if __name__ == '__main__':
 
   # type
   imagetype = sys.argv[2]
+  print imagetype
 
   # set algorithm
   if len(sys.argv) == 4:
@@ -114,7 +115,7 @@ if __name__ == '__main__':
 
   basefilename = result_path + filename
   csvdata = '"' + filename + '","' + url + '",' + imagetype + ',' + '"' + cascade_name + '"'
-  
+#  csvdata = '"' + filename + '","' + url + '",' + imagetype + ',' + '"' + cascade_name + '"'+'"'+description+'"'
   detectFaces(path, basefilename, csvdata)
       
 #  except:
