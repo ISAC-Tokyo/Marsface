@@ -47,16 +47,19 @@ def download_url(url):
 spamWriter = csv.writer(open(csvfile,  'wb'), delimiter   = '\t'  )
 for i in range(1,all_image_num):
     url = ("http://photojournal.jpl.nasa.gov/catalog/PIA%05i"% (i))
-    
-    saveimagepath = download_image(i)
+    imageurl = ("http://photojournal.jpl.nasa.gov/tiff/PIA%05i.tif"% (i))
     soup = BeautifulSoup(download_url(url))
-    caption = soup.find('caption').find('b').string
+    try:
+        caption = soup.find('caption').find('b').string
+    except:
+        caption = ""
+        
     try:
         imagetype = soup.find('strong').find('a').string
     except:
         imagetype = ""
         
-    spamWriter.writerow([i,url,saveimagepath, caption,imagetype])
+    spamWriter.writerow([i,url,imageurl,caption,imagetype])
     
     
 #make url

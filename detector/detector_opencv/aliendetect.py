@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import cv2
 import sys
@@ -8,12 +8,12 @@ import urllib
 import numpy
 from PIL import Image
 
-cascade_name = "haarcascade_frontalface_default.xml"
-cache_path = 'cache/'
-result_path = 'result/'
+cascade_name = "./detector_opencv/haarcascade_frontalface_default.xml"
+cache_path = './cache/'
+result_path = './result/image/opencv/'
 splitsize = 1500
 splitstep = 1200
-csvfilename = "result.csv"
+csvfilename = "./result/csv/result_opencv.csv"
 
 def downloadFile(url):
   filename = urlparse.urlparse(url)[2].split('/')[-1]
@@ -94,7 +94,7 @@ def addCsvInfo(faces, csvfilename, offsetX, offsetY, countoffset):
 if __name__ == '__main__':
 
   # check args
-  if len(sys.argv) < 2:
+  if len(sys.argv) < 3:
     print 'Usage: aliendetect url [,detector]\n';
     sys.exit(-1)
   
@@ -102,15 +102,18 @@ if __name__ == '__main__':
   url = sys.argv[1]
   print url
 
+  # type
+  imagetype = sys.argv[2]
+
   # set algorithm
-  if len(sys.argv) == 3:
-    cascade_name = sys.argv[2]
+  if len(sys.argv) == 4:
+    cascade_name = sys.argv[3]
 
 #  try:
   path, filename = downloadFile(url)
 
   basefilename = result_path + filename
-  csvdata = '"' + filename + '","' + url + '",' + '"moon"' + ',' + '"' + cascade_name + '"'
+  csvdata = '"' + filename + '","' + url + '",' + imagetype + ',' + '"' + cascade_name + '"'
   
   detectFaces(path, basefilename, csvdata)
       

@@ -6,10 +6,9 @@ import urllib
 import pickle
 from PIL import Image
 
-
-image_path = '../testdata/'
-cache_path = '../cache/'
-result_path = '../result/'
+cache_path = './cache/'
+result_path = './result/image/ccv/'
+csv_path = './result/csv/'
 
 def downloadFile(url):
   filename = urlparse.urlparse(url)[2].split('/')[-1]
@@ -41,8 +40,9 @@ def bbfdetect(filename,target,traindata):
     else:
       print 'Use convert png image : ' + root + '.png'
 
-  cmd = '../ccv/bin/bbfdetect '+ root + '.png ' +traindata
-
+  cmd = './detector_ccv/ccv/bin/bbfdetect '+ root + '.png ' +traindata
+  
+  print  cmd
   tmp = commands.getoutput(cmd).splitlines()
   
   result = []
@@ -77,7 +77,7 @@ def dpmdetect(filename,target,traindata):
     else:
       print 'Use convert png image : ' + root + '.png'
 
-  cmd = '../ccv/bin/dpmdetect '+ root + '.png ' +traindata
+  cmd = './detector_ccv/ccv/bin/dpmdetect '+ root + '.png ' +traindata
   
   print cmd
   tmp = commands.getoutput(cmd).splitlines()
@@ -134,23 +134,23 @@ def addCsvInfo(csvdata,objects,csvfilename):
 
 if __name__ == '__main__':
 
-  if len(sys.argv) < 2:
+  if len(sys.argv) < 3:
     print 'Usage: aliendetect url\n';
     sys.exit(-1)
 
   url = sys.argv[1]
+  imagetype = sys.argv[2]
   cascade_name = 'btf'
   
   imagepath, filepath = downloadFile(url)
   inputimage_root, inputimage_ext = os.path.splitext(imagepath)
   inputimage_filename = os.path.basename(inputimage_root)
-  objects = bbfdetect(imagepath, 'face',' ../ccv/samples/face')
-  objects = objects + dpmdetect(imagepath ,'cars', ' ../ccv/samples/car.m')
+  objects = bbfdetect(imagepath, 'face',' ./detector_ccv/ccv/samples/face')
   
   if len(objects) != 0:
     addAlianInfo(inputimage_filename,objects)
-    csvdata = '"' + filepath + '","' + url + '",' + '"moon"' + ',' + '"' + cascade_name + '"'
-    addCsvInfo(csvdata,objects,"./result.csv")
+    csvdata = '"' + filepath + '","' + url + '",' + imagetype + ',' + '"' + cascade_name + '"'
+    addCsvInfo(csvdata,objects,csv_path + "./result_ccv.csv")
     count = cropImages(inputimage_filename,objects)
     print ' => ' + str(count) + ' object(s) found.'
   else:
