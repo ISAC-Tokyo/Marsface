@@ -51,6 +51,8 @@ if __name__ == '__main__':
     
     range = (x, y, x + w - 1, y + h - 1)
     splitedIm = im.crop(range)
+    if splitedIm.mode != "RGB":
+      splitedIm= splitedIm.convert("RGB")
     splitedIm.save(thumbnailFile, 'JPEG', quality=95)
     resizedIm = splitedIm.resize((240, 240), Image.ANTIALIAS)
     resizedIm.convert("RGB")
