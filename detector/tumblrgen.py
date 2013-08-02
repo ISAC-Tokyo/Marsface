@@ -20,7 +20,8 @@ if __name__ == '__main__':
 
   fw = open(csv_output_name, 'a')
   csvfile = open(filename)
- 
+
+  cacheimage = ""
   for row in csv.reader(csvfile):
     file = row[0]
     x = int(row[5])
@@ -28,19 +29,21 @@ if __name__ == '__main__':
     w = int(row[7])
     h = int(row[8])
     
-    outputFile = tumblr_path + file + '_' + str(x) + '_' + str(y) + '_' + str(w) + '_'+ str(h) + '.jpg'
-    thumbnailFile = thumbnail_path + file + '_' + str(x) + '_' + str(y) + '_' + str(w) + '_'+ str(h) + '.jpg'
+    outputFile = tumblr_path + file + '_' + str(x) + '_' + str(y) + '_' + str(w) + '_'+ str(h) + '.png'
+    thumbnailFile = thumbnail_path + file + '_' + str(x) + '_' + str(y) + '_' + str(w) + '_'+ str(h) + '.png'
     
     fw.write(file + "," + thumbnailFile + "," + outputFile + "\n")
     
-    im = Image.open(cache + file)
+    if cacheimage != file:
+      im = Image.open(cache + file)
+      cacheimage = file
+
     original_w = im.size[0]
     original_h = im.size[1]
     if original_w > original_h :
       scale = float(640.0 / original_w)
     else:
       scale = float(640.0 / original_h)
-    
     
     sx0 = float(x * scale)
     sy0 = float(y * scale)
@@ -51,27 +54,25 @@ if __name__ == '__main__':
     
     range = (x, y, x + w - 1, y + h - 1)
     splitedIm = im.crop(range)
-    if splitedIm.mode != "RGB":
-      splitedIm= splitedIm.convert("RGB")
-    splitedIm.save(thumbnailFile, 'JPEG', quality=95)
+    splitedIm.save(thumbnailFile, 'PNG')
     resizedIm = splitedIm.resize((240, 240), Image.ANTIALIAS)
     resizedIm.convert("RGB")
     
-    im.thumbnail((640, 640), Image.ANTIALIAS)
-    im = im.convert("RGB")
-    dr = ImageDraw.Draw(im)
+#    im.thumbnail((640, 640), Image.ANTIALIAS)
+    resizedIm2 = im.resize((640, 640), Image.ANTIALIAS)
+    dr = ImageDraw.Draw(resizedIm2)
     
     if sx > 320 : 
-      im.paste(resizedIm,(0,0));
+      resizedIm2.paste(resizedIm,(0,0));
       dr.rectangle( (0,0,240,240), outline="#FFFFFF")
     else:
-      im.paste(resizedIm,(640-240,0));
+      resizedIm2.paste(resizedIm,(640-240,0));
       dr.rectangle( (640-240,0,640,240), outline="#FFFFFF")
       
     dr.line( (sx-10,sy-10,sx+10,sy+10) , 'red', 3)
     dr.line( (sx+10,sy-10,sx-10,sy+10) , 'red', 3)
 	
-    im.save(outputFile, 'JPEG', quality=95)
+    resizedIm2.save(outputFile, 'PNG')
     print outputFile
  
   csvfile.close()
