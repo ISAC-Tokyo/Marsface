@@ -1,23 +1,25 @@
-<html>
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<title>Mar Project</title>
-<link rel="shortcut icon" href="http://marproject.org/favicon.ico" type="image/vnd.microsoft.icon" />
-<link rel="icon" href="http://marproject.org/favicon.ico" type="image/vnd.microsoft.icon" />
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>Find Aliens' Footprints!</title>
+  <link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
+  <link rel="stylesheet" href="css/grid.css" type="text/css" media="all">
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
+  <style type="text/css">
+  #sidebar {
+    width: 0px;
+  }
+  #content {
+    width: 100%;
+  }
+  </style>
 </head>
-<body bgcolor="black" text="gray">
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-<center>
+<body>
 <!--
 We found a huge face (about 6 km x 6 km) on the south pole of the moon!!
 
-http://lroc.sese.asu.edu/data/pr/tiff/SP_Mosaic.tif (37MB)
+http://wms.lroc.asu.edu/lroc_browse/view/SP_Mosaic
 (4754,840)-(4842,922)
 
 ##-###################-###--#########------####################################--#############
@@ -67,22 +69,68 @@ http://lroc.sese.asu.edu/data/pr/tiff/SP_Mosaic.tif (37MB)
 ########################----------------------------##----------------------------------------
 ########################----------------------------------------------------------------------
 ######################-#-------------------#----####------------------------------------------
--->
-<img src ="marsface_en_2.png"><br/>
-<h2><a href="http://marproject.org/find.php">Find aliens' footprints!</a></h2>
-<a href="http://marproject.org/find.php"><img src="f005.png"  style="border:none;" alt="a huge face (about 6 km x 6 km) on the south pole of the moon"></a></br>
-<h3>
-<a href="http://spaceappschallenge.org/project/team-against-religion-posing-as-sciencepastafarian/">Space Apps Challenge 2013 </a>
-<h3>Slideshare</h3>
-<a href="http://www.slideshare.net/takasu/marsface-project">English</a>
-<a href="http://www.slideshare.net/takasu/marsfaceproject">Japanese</a>
-<h3>Presentation</h3>
-<a href="http://www.ustream.tv/recorded/31754745/highlight/347055?utm_campaign=www.facebook.com&utm_source=347055&utm_medium=social">ustream</a>
-<br/>
-<br/>
-<div class="fb-like" data-href="http://marproject.org/" data-send="true" data-layout="button_count" data-width="450" data-show-faces="true" data-colorscheme="dark"></div>
+//-->
+
+<!-- facebook -->
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+<!-- content -->
+<div id="content">
+		<h2>Find Aliens' Footprints!</h2>
+</div>
+<div class="fb-like" data-href="http://marproject.org/find.php" data-send="true" data-layout="button_count" data-width="80" data-show-faces="true" data-colorscheme="dark"></div>
 <a href="https://twitter.com/share" class="twitter-share-button" data-hashtags="marsface">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
 </center>
+<div id="content">
+<a href="http://marproject.org/"><img src="grey.png" class="target" data-original="marsface_sq.png" width="263" height="262"></a>
+<?php
+$lines = file('tumb.csv');
+foreach ($lines as $line_num => $line) {
+	$data = split(",",$line);
+	if(count($data) > 1){
+		echo '<a href="';
+		echo $data[1];
+		echo '"><img src="grey.png" class="target" data-original="';
+		echo $data[0];
+		echo '" width="128" height="128"></a>';
+		echo "\n";
+	}
+}
+?>
+</div>
+</section>
+  
+  <div id="footer">
+  </div>
+
+  <script src="js/jquery.js" charset="utf-8"></script>
+  <script src="js/jquery.lazyload.js" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">
+      $(function() {
+          $("img").lazyload({
+              effect : "fadeIn"
+              /*
+              appear : function(elements_left, settings) {
+                  console.log("appear");
+                  console.log(elements_left);
+                  //console.log(this, elements_left, settings);
+              },
+              load : function(elements_left, settings) {
+                  console.log("load");
+                  console.log(elements_left);
+                  //console.log(this, elements_left, settings);
+              }
+              */
+          });
+		      });
+  </script>
 </body>
 </html>
