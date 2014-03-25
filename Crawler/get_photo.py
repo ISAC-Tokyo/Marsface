@@ -7,30 +7,32 @@ import urllib2
 import os.path
 import md5
 import pickle
+import urlparse
 from BeautifulSoup import BeautifulSoup          # For processing HTML
 
-imagetmpdir = "../images/"
+cache_path = '../data/cache/'
+result_path = '../data/result/image/ccv/'
+csv_path = '../data/result/csv/'
+imagetmpdir = "../data/images/"
 tmpdir = "/tmp/"
-csvfile = "../imagelist.csv"
+csvfile = "../data/imagelist.csv"
+
 
 # download image
 # download url
 
 all_image_num = 17079
 
-def download_image(i):
-    url = ("http://photojournal.jpl.nasa.gov/tiff/PIA%05i.tif"% (i))
-    image = "PIA%05i.tif" % (i)
-    print imagetmpdir+image
-    if os.path.exists(imagetmpdir+image) == False:
-        img = urllib.urlopen(url)
-        localfile = open(imagetmpdir+image, 'wb')
-        localfile.write(img.read())
-        img.close()
-        localfile.close()
-    return imagetmpdir + image
-    
-    
+def downloadFile(url):
+  filename = urlparse.urlparse(url)[2].split('/')[-1]
+  path = cache_path + filename
+  if os.path.isfile(path) == False:
+    print 'Download  :' + path
+    file, header = urllib.urlretrieve(url, path)
+  else:
+    print 'Use original image cache  : ' + path
+  return path, filename
+
 def download_url(url):
     print url
     filedir = tmpdir+md5.new(url).hexdigest()
@@ -45,10 +47,13 @@ def download_url(url):
         return html
 
 spamWriter = csv.writer(open(csvfile,  'wb'), delimiter   = '\t'  )
+
 for i in range(1,all_image_num):
     url = ("http://photojournal.jpl.nasa.gov/catalog/PIA%05i"% (i))
     imageurl = ("http://photojournal.jpl.nasa.gov/tiff/PIA%05i.tif"% (i))
+
     soup = BeautifulSoup(download_url(url))
+    imagepath, filepath = downloadFile(url)
     try:
         caption = soup.find('caption').find('b').string
     except:
@@ -59,7 +64,7 @@ for i in range(1,all_image_num):
     except:
         imagetype = ""
         
-    spamWriter.writerow([i,url,imageurl,caption,imagetype])
+    spamWriter.writerow([i,url,imageurl,caption,imagetype,imagepath,filepath])
     
     
 #make url

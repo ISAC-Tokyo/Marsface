@@ -6,9 +6,12 @@ import urllib
 import pickle
 from PIL import Image
 
-cache_path = './cache/'
-result_path = './result/image/ccv/'
-csv_path = './result/csv/'
+cache_path = '../cache/'
+result_path = '../result/image/ccv/'
+csv_path = '../result/csv/'
+imagetmpdir = "../images/"
+tmpdir = "/tmp/"
+csvfile = "../imagelist.csv"
 
 def downloadFile(url):
   filename = urlparse.urlparse(url)[2].split('/')[-1]
@@ -143,6 +146,7 @@ if __name__ == '__main__':
   cascade_name = 'btf'
   
   imagepath, filepath = downloadFile(url)
+  '''
   inputimage_root, inputimage_ext = os.path.splitext(imagepath)
   inputimage_filename = os.path.basename(inputimage_root)
   objects = bbfdetect(imagepath, 'face',' ./detector_ccv/ccv/samples/face')
@@ -156,3 +160,4 @@ if __name__ == '__main__':
   else:
     print 'not found'
   print '--------------------------------------------------------------------------------'
+'''
