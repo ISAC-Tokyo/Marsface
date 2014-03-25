@@ -11,9 +11,6 @@ import urlparse
 from BeautifulSoup import BeautifulSoup          # For processing HTML
 
 cache_path = '../data/cache/'
-result_path = '../data/result/image/ccv/'
-csv_path = '../data/result/csv/'
-imagetmpdir = "../data/images/"
 tmpdir = "/tmp/"
 csvfile = "../data/imagelist.csv"
 
@@ -25,16 +22,16 @@ all_image_num = 17079
 
 def downloadFile(url):
   filename = urlparse.urlparse(url)[2].split('/')[-1]
-  path = cache_path + filename
+  path = cache_path + filename+".tiff"
   if os.path.isfile(path) == False:
-    print 'Download  :' + path
+    print 'Download image:' + path
     file, header = urllib.urlretrieve(url, path)
   else:
     print 'Use original image cache  : ' + path
   return path, filename
 
 def download_url(url):
-    print url
+    print 'Download page:'+ url
     filedir = tmpdir+md5.new(url).hexdigest()
     if os.path.exists(filedir) == True:
         with open(filedir,'rb') as f: 
