@@ -7,9 +7,12 @@ from decaf.util import smalldata
 from decaf.layers import convolution, fillers
 import numpy as np
 from skimage import io
+from PIL import Image
+import sys
 
 """The main demo code."""
-img = np.asarray(smalldata.lena())
+#img = np.asarray(smalldata.lena())
+img = np.asarray(Image.open(sys.argv[1]))
 img = img.reshape((1,) + img.shape).astype(np.float64)
 # wrap the img in a blob
 input_blob = base.Blob()

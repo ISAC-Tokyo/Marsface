@@ -6,6 +6,8 @@ from decaf.util import translator, transform
 import logging
 import numpy as np
 import os
+from PIL import Image
+import sys
 
 _JEFFNET_FILE = os.path.join(os.path.dirname(__file__),
                              'imagenet.decafnet.epoch90')
@@ -157,12 +159,12 @@ def main():
     from decaf.util import smalldata, visualize
     logging.getLogger().setLevel(logging.INFO)
     net = DecafNet()
-    lena = smalldata.lena()
-    scores = net.classify(lena)
+    img = np.asarray(Image.open(sys.argv[1]))
+#    lena = smalldata.lena()
+    scores = net.classify(img)
     print 'prediction:', net.top_k_prediction(scores, 5)
-    visualize.draw_net_to_file(net._net, 'decafnet.png')
-    print 'Network structure written to decafnet.png'
-
+#    visualize.draw_net_to_file(net._net, 'decafnet.png')
+#    print 'Network structure written to decafnet.png'
 
 if __name__ == '__main__':
     main()

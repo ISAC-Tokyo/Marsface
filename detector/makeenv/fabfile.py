@@ -39,13 +39,13 @@ def install_mathpkgs():
     local("sudo pip install pandas")
     local("sudo pip install httplib2")
     local("sudo pip install ujson")
-    local("sudo pip install boost_python")
+#    local("sudo pip install boost_python")
 
 
 def install_matplotlib():
     local("sudo apt-get install python-matplotlib")
     local("sudo pip install cython")
-    local("sudo apt-get install scikit-learn scikit-image")
+    local("sudo pip  install scikit-learn scikit-image")
 
 def install_ipython():
     local("sudo pip install ipython")
@@ -55,9 +55,10 @@ def install_ipython():
     
 def install_cuda():
     local("wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1204/x86_64/cuda-repo-ubuntu1204_5.5-0_amd64.deb")
+    local("sudo apt-get install gdebi")
     local("sudo gdebi cuda-repo-ubuntu1204_5.5-0_amd64.deb")
     local("sudo apt-get update")
-    local("sudo apt-get install cuda")
+#    local("sudo apt-get install cuda")
 
 def install_caffe():
     local("sudo sudo apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libboost-all-dev libhdf5-serial-dev")
@@ -77,11 +78,11 @@ def install_google_logging():
 
 
 def demo1_deploy():
-#    install_build()
-#    install_bs()
-#    install_mathpkgs()
-#    install_matplotlib()
-#    install_ipython()
-#    install_caffe()
-#    install_google_logging()
+    install_build()
+    install_bs()
+    install_mathpkgs()
+    install_matplotlib()
+    install_ipython()
+    install_caffe()
+    install_google_logging()
     install_cuda()
